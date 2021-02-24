@@ -7,6 +7,7 @@ requirements:
     listing:
       - $(inputs.script)
 
+baseCommand: bash
 arguments: 
   - $(inputs.script)
       

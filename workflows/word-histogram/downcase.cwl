@@ -7,7 +7,6 @@ arguments: ["[:upper:]", "[:lower:]"]
 
 stdin: $(inputs.infile.path)
 stdout: output
-
 inputs:
   infile:
     type: File

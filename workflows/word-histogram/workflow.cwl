@@ -3,33 +3,32 @@
 cwlVersion: v1.0
 class: Workflow
 
-requirements:
-  ScatterFeatureRequirement: {}
 inputs:
   infile: File
+
 steps:
   downcase:
     run: downcase.cwl
     in:
       infile: infile
-    out: [outfile]
+    out: [output]
   rmindex:
     run: remove-index.cwl
     in:
-      infile: downcase/outfile
-    out: [outfile]
+      infile: downcase/output
+    out: [output]
   split:
     run: split-words.cwl
     in:
-      infile: rmindex/outfile
-    out: [outfile]
+      infile: rmindex/output
+    out: [output]
   histogram:
     run: histogram.cwl
     in:
-      infile: split/outfile
-    out: [outfile]
+      infile: split/output
+    out: [output]
 
 outputs:
-  outfile:
+  output: 
     type: File
-    outputSource: histogram/outfile
+    outputSource: histogram/output

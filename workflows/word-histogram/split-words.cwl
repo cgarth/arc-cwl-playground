@@ -5,25 +5,17 @@ class: CommandLineTool
 requirements:
   InitialWorkDirRequirement:
     listing:
-      - $(inputs.script)
+      - class: File
+        basename: script
+        location: split-words.sh 
 
-baseCommand: bash
-arguments: 
-  - $(inputs.script)
+baseCommand: [ bash, script ]
       
 stdin: $(inputs.infile.path)
 stdout: output
 
 inputs:
-  script:
-    type: File
-    default:
-      class: File
-      location: split-words.sh 
-  infile:
-    type: File
-    streamable: true
+  infile: File
+
 outputs:
-  outfile:
-    type: stdout
-    streamable: true
+  output: stdout

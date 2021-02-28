@@ -9,19 +9,13 @@ requirements:
         entry: |-
           sort | uniq -c | sort -r -n -k 1 | head -n 20
 
-baseCommand: bash
-arguments: 
-  - script
+baseCommand: [ bash, script ]
       
 stdin: $(inputs.infile.path)
 stdout: output
 
 inputs:
-  infile:
-    type: File
-    streamable: true
+  infile: File
 
 outputs:
-  outfile:
-    type: stdout
-    streamable: true
+  output: stdout

@@ -1,28 +1,27 @@
-#!/usr/bin/env cwl-runner
-
-cwlVersion: v1.1
+cwlVersion: v1.2
 class: Workflow
 
 requirements:
-  SubworkflowFeatureRequirement: {}
+  - class: SubworkflowFeatureRequirement
+  - class: MultipleInputFeatureRequirement
 
-inputs: []
+
+inputs:
+  param: Any
 
 steps:
-  run-one:
+  one:
     run: runs/one/run.cwl
-    in: []
-    out: [outfile]
-  run-two:
+    in: { param: param, _base: { default: "runs/one" } }
+    out: [out]
+  two:
     run: runs/two/run.cwl
-    in:
-      infile: run-one/outfile
-    out: [plot]
+    in: { param: param, _base: { default: "runs/two" } }
+    out: [out]
 
 outputs:
-  run-one-results:
-    type: File
-    outputSource: run-one/outfile
-  run-two-results:
-    type: File
-    outputSource: run-two/plot
+  all: 
+    type: Directory[]
+    outputSource: 
+      - one/out
+      - two/out

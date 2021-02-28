@@ -2,17 +2,14 @@
 cwlVersion: v1.0
 class: CommandLineTool
 
-baseCommand: "cut" 
-arguments: ['-d', ' ', "-f", "3-"]
+baseCommand: [cut, -d, " ", -f, 3-]
 
 stdin: $(inputs.infile.path)
 stdout: output
 
 inputs:
-  infile:
-    type: File
-    streamable: true
+  infile: File
+
 outputs:
-  outfile:
-    type: stdout
-    streamable: true
+  output: stdout
+

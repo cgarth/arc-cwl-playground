@@ -2,15 +2,14 @@
 cwlVersion: v1.0
 class: CommandLineTool
 
-baseCommand: "tr" 
-arguments: ["[:upper:]", "[:lower:]"]
+baseCommand: [ tr, "[:upper:]", "[:lower:]" ]
 
-stdin: $(inputs.infile.path)
+stdin:  $(inputs.infile.path)
 stdout: output
+
 inputs:
-  infile:
-    type: File
-    streamable: true
+  infile: File
+
 outputs:
-  outfile:
-    type: stdout
+  output: stdout
+

@@ -1,0 +1,4 @@
+param:
+  infile:
+    class: File 
+    location: assets/bible/mlbible.txt

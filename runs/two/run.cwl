@@ -1,45 +1,52 @@
 #!/usr/bin/env cwl-runner
 
-cwlVersion: v1.1
+cwlVersion: v1.2
 class: Workflow
 
 requirements:
-  SubworkflowFeatureRequirement: {}
-  InlineJavascriptRequirement: {}
+  - class: StepInputExpressionRequirement
+  - class: ScatterFeatureRequirement
+  - class: MultipleInputFeatureRequirement
 
 inputs:
-  infile:
-    type: File
+  param: Any
+  _base:
+    type: string
+    default: .
 
 steps:
-  main:
-    run: 
-      class: CommandLineTool
-      baseCommand: python3
-      inputs:
-        infile: 
-          type: File
-          inputBinding:
-              position: 2
-        script:
-          type: File
-          inputBinding:
-              position: 1
-          default: 
-              class: File
-              location: ./plot.py
-      outputs:
-        plot:
-          type: File
-          outputBinding:
-            glob: test.pdf
+  determine-books:
+    run: determine-books.cwl
     in:
-      infile: 
-        source: infile
-    out: [plot]
+      inputfile: { source: param, valueFrom: $(self.infile) }
+    out: [books]
+
+  split-books:
+    run: isolate-book.cwl
+    in: { inputfile: { source: param, valueFrom: $(self.infile) }, book: determine-books/books }
+    scatter: book
+    out: [bookfile]
+
+  count:
+    run: wordcount.cwl
+    in: { inputfile: split-books/bookfile }
+    out: [count]
+    scatter: inputfile
+
+  combine:
+    run: combine.cwl
+    in: { columns: [determine-books/books, count/count] }
+    out: [combined]
+
+  collect:
+    run: ../../workflows/lib/collect.cwl
+    in:
+      what: [combine/combined, determine-books/books]
+      base: _base
+    out: [out]
 
 outputs:
-  plot:
-    type: File
-    outputSource: main/plot
-
+  out:
+    type: Directory
+    outputSource: collect/out
+  
